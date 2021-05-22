@@ -3,8 +3,10 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include<iostream>
+#include <iostream>
+
 using namespace std;
+
 // Maximum number of chairs
 #define MAX_CHAIR 4
 // Maximum number of customers
@@ -17,9 +19,10 @@ using namespace std;
 // chair
 int freeSeats;
 int n;
-// Barber and customer semaphore
 
+// Barber and customer semaphore
 sem_t barber, customers;
+
 // Mutually exclusive semaphore protection critical area (ie chair)
 pthread_mutex_t seats;
 
@@ -79,6 +82,10 @@ void * Start(void *arg){
     cout << "====================================\n";
     cout << "Please take the number of customers: ";
     cin >> n;
+    cout << "====================================\n";
+    cout << "=============== START ==============\n";
+    cout << "====================================\n";
+
 }
 
 void *End(void *arg){
