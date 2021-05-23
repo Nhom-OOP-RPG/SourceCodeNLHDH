@@ -75,7 +75,16 @@ void * Customer(void *arg){
        
 }
 
-void * Start(void *arg){
+/*void *End(void *arg){
+    cout << "=============== THE END ===============";
+}*/
+int main(){ 
+
+    int i;
+    if(init()) {
+        cout << "initialize semaphore error!\n";
+        return 0;
+    }
 
     cout << "The maximum number of customer is 20\n";
     cout << "The maximum number of free chair is 4\n";
@@ -86,29 +95,12 @@ void * Start(void *arg){
     cout << "=============== START ==============\n";
     cout << "====================================\n";
 
-}
-
-void *End(void *arg){
-    cout << "=============== THE END ===============";
-}
-int main(){ 
-
-    int i;
-    if(init()) {
-        cout << "initialize semaphore error!\n";
-        return 0;
-    }
-
-    pthread_t start;
-    pthread_t end;
+    //pthread_t end;
     pthread_t barberID;
     pthread_t customersID[MAX_CUSTOMERS];
 
     pthread_attr_t attr;
     pthread_attr_init(&attr);
-
-    pthread_create(&start, &attr, Start, NULL);
-    pthread_join(start, NULL);
 
     pthread_create(&barberID, &attr, Barber, NULL);
 
@@ -117,7 +109,7 @@ int main(){
         sleep(1);
     }
 
-    pthread_create(&end, &attr, End, NULL);
+    //pthread_create(&end, &attr, End, NULL);
 
     pthread_join(barberID, NULL);
 
