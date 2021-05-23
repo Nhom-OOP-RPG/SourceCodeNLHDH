@@ -1,0 +1,21 @@
+    Chức năng của hàm pthread_create tạo mới một thread. Tham số đầu vào là một biến của thread thuộc kiểu pthread_t, 
+một thuộc tính của thead thuộc kiểu pthread_attr_t,đặt là NULL nếu giữ thuộc tính thread mặc định,
+một thủ tục kiểu void và một con trỏ đối số cho hàm thuộc kiểu void.   
+    
+    Thư viện pthread.h cung cấp ba cơ chế đồng bộ:
+
+        +) mutexes – Khoá loại trừ lẫn nhau: Khoá việc truy cập các biến của các thead khác. 
+        Do đó thực thi này có toàn quyền truy cập và thiết lập cho các biến.
+        +) joins – Thiết lập một thread đợi cho đến khi những thread khác hoàn thành.
+        +) Các biến điều kiện – kiểu dữ liệu pthread_cond_t // Tìm hiểu thêm
+    
+pthread_join() được sử dụng để đợi cho việc kết thúc của một thread hoặc chờ để tái kết hợp với luồng chính của hàm main.
+
+pthread_mutex_lock() – giữ  khóa trên biến mutex chỉ định. Nếu mutex đã bị khoá bở một thread khác, 
+                        lời gọi này sẽ bị giữ lại cho tới khi mutex này mở khoá.
+
+pthread_mutex_unlock() – mở khoá biến mutex. Một lỗi trả về nếu mutex đã mở khoá hoặc được sở hữu của một thread khác.
+
+    pthread_mutex_t  : 	Mutex
+    pthread_t   : 	Số định danh của thread (threadID)
+    pthread_attr_t   :  	Thuộc tính của thread
