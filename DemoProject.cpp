@@ -19,7 +19,7 @@ using namespace std;
 // chair
 int freeSeats;
 int n;
-
+int i;
 // Barber and customer semaphore
 sem_t barber, customers;
 
@@ -48,6 +48,7 @@ void * Barber(void *arg){
         v(barber);
         cout << "The barber has done one!\n";
         sleep(2);
+        if(freeSeats == MAX_CHAIR && i == n) pthread_exit(NULL);
     }
 }
 
@@ -80,7 +81,7 @@ void * Customer(void *arg){
 }*/
 int main(){ 
 
-    int i;
+
     if(init()) {
         cout << "initialize semaphore error!\n";
         return 0;
@@ -115,5 +116,6 @@ int main(){
 
     for (i = 0; i < n; ++i) pthread_join(customersID[i], NULL);
 
+    printf("============ THE END =============");
     return 0;
 }
