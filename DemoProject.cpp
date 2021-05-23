@@ -123,7 +123,5 @@ int main(){
 
     for (i = 0; i < n; ++i) pthread_join(customersID[i], NULL);
 
-    pthread_join(end, NULL);
-
     return 0;
 }
