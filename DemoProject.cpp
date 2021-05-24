@@ -39,7 +39,6 @@ void * Barber(void *arg){
     while (1)
     {
         p(customers); // try to serve a customer, ortherwise sleep
-        // print 
         pthread_mutex_lock(&seats);
         ++ freeSeats;
         cout << "The barber is cutting hair for a customer...\n";
@@ -76,9 +75,6 @@ void * Customer(void *arg){
        
 }
 
-/*void *End(void *arg){
-    cout << "=============== THE END ===============";
-}*/
 int main(){ 
 
 
@@ -96,7 +92,6 @@ int main(){
     cout << "=============== START ==============\n";
     cout << "====================================\n";
 
-    //pthread_t end;
     pthread_t barberID;
     pthread_t customersID[MAX_CUSTOMERS];
 
@@ -109,8 +104,6 @@ int main(){
         pthread_create(&customersID[i], &attr, Customer, (void *) &i);
         sleep(1);
     }
-
-    //pthread_create(&end, &attr, End, NULL);
 
     pthread_join(barberID, NULL);
 
