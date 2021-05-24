@@ -95,13 +95,10 @@ int main(){
     pthread_t barberID;
     pthread_t customersID[MAX_CUSTOMERS];
 
-    pthread_attr_t attr;
-    pthread_attr_init(&attr);
-
-    pthread_create(&barberID, &attr, Barber, NULL);
+    pthread_create(&barberID, NULL, Barber, NULL);
 
     for (i = 0; i < n; ++i) {
-        pthread_create(&customersID[i], &attr, Customer, (void *) &i);
+        pthread_create(&customersID[i], NULL, Customer, (void *) &i);
         sleep(1);
     }
 
