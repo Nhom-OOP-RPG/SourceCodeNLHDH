@@ -4,7 +4,6 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <iostream>
-
 using namespace std;
 
 // Maximum number of chairs
@@ -18,8 +17,7 @@ using namespace std;
 
 // chair
 int freeSeats;
-int n;
-int i;
+int n, i;
 // Barber and customer semaphore
 sem_t barber, customers;
 
@@ -55,9 +53,7 @@ void * Customer(void *arg){
 
     int * id_p = (int *)arg;
     int id = *id_p ;
-
     cout << "Customer #" <<  id << " comes ... \n";
-
     pthread_mutex_lock(&seats);
     if (freeSeats > 0)
     {
@@ -71,18 +67,14 @@ void * Customer(void *arg){
     }else{
         pthread_mutex_unlock(&seats);
         cout << "Customer #" << id << " left ... \n";
-    } 
-       
+    }       
 }
 
 int main(){ 
-
-
     if(init()) {
         cout << "initialize semaphore error!\n";
         return 0;
     }
-
     cout << "The maximum number of customer is 20\n";
     cout << "The maximum number of free chair is 4\n";
     cout << "====================================\n";
