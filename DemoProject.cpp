@@ -23,7 +23,7 @@ int i;
 // Barber and customer semaphore
 sem_t barber, customers;
 
-// Mutually exclusive semaphore protection critical area (ie chair)
+// mutex seats
 pthread_mutex_t seats;
 
 // Initialize the number of chairs and semaphore
@@ -38,7 +38,7 @@ void * Barber(void *arg){
     cout << "The barber shop opens...\n";
     while (1)
     {
-        p(customers); // try to serve a customer, ortherwise sleep
+        p(customers);
         pthread_mutex_lock(&seats);
         ++ freeSeats;
         cout << "The barber is cutting hair for a customer...\n";
@@ -62,10 +62,10 @@ void * Customer(void *arg){
     if (freeSeats > 0)
     {
         -- freeSeats;
-        v(customers); // Add a new customer
+        v(customers);
         cout << "Number of free seats: " << freeSeats << "\n";
         pthread_mutex_unlock(&seats);
-        p(barber);   // Waiting for the barber
+        p(barber);
         cout << "Customer #" << id << " is ready to be cutted his hair... \n";
         sleep(1);
     }else{
