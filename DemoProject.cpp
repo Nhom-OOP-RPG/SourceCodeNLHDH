@@ -63,7 +63,6 @@ void * Customer(void *arg){
         pthread_mutex_unlock(&seats);
         p(barber);
         cout << "Customer #" << id << " is ready to be cutted his hair... \n";
-        sleep(1);
     }else{
         pthread_mutex_unlock(&seats);
         cout << "Customer #" << id << " left ... \n";
