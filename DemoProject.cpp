@@ -7,7 +7,7 @@
 using namespace std;
 
 // Maximum number of chairs
-#define MAX_CHAIR 4
+#define MAX_CHAIR 5
 // Maximum number of customers
 #define MAX_CUSTOMERS 20
 
@@ -25,46 +25,66 @@ sem_t barber, customers;
 pthread_mutex_t seats;
 
 // Initialize the number of chairs and semaphore
-int init()
-{
+int init(){
     freeSeats = MAX_CHAIR;
     return (sem_init(&barber, 0, 1) || sem_init(&customers, 0, 0));
 }
 
 void * Barber(void *arg){
-
     cout << "The barber shop opens...\n";
-    while (1)
-    {
+    while (1){
+        //wait(customers)
         p(customers);
+        
+        //wait(seat)
         pthread_mutex_lock(&seats);
+        
+        //freeseats++
         ++ freeSeats;
-        cout << "The barber is cutting hair for a customer...\n";
+        
+        cout << "\nThe barber is cutting hair for a customer...\n";
         cout << "Number of free seats: " << freeSeats << "\n";
+		sleep(rand() % 4 + 1);
+		
+        //signal(seat)
         pthread_mutex_unlock(&seats);
+        
+        //signal(barber)
         v(barber);
+        
         cout << "The barber has done one!\n";
-        sleep(2);
         if(freeSeats == MAX_CHAIR && i == n) pthread_exit(NULL);
     }
 }
 
 void * Customer(void *arg){
-
     int * id_p = (int *)arg;
     int id = *id_p ;
-    cout << "Customer #" <<  id << " comes ... \n";
+    
+    cout << "\nCustomer #" <<  id << " comes ... \n";
+    
+    //wait(seat)
     pthread_mutex_lock(&seats);
-    if (freeSeats > 0)
-    {
-        -- freeSeats;
-        v(customers);
+    
+    if (freeSeats > 0){
+    	
+        //freeseats--
+        freeSeats--;
         cout << "Number of free seats: " << freeSeats << "\n";
+        
+        //signal(customers)
+        v(customers);
+        
+        //signal(seat)
         pthread_mutex_unlock(&seats);
+        
+        //wait(barber)
         p(barber);
         cout << "Customer #" << id << " is ready to be cutted his hair... \n";
-    }else{
+    } else {
+        //signal(seat)
         pthread_mutex_unlock(&seats);
+        cout << "There is no freeseat left.\n";
         cout << "Customer #" << id << " left ... \n";
     }       
 }
@@ -88,11 +108,12 @@ int main(){
 
     pthread_create(&barberID, NULL, Barber, NULL);
 
-    for (i = 0; i < n; ++i) {
+    for (i = 0; i < n; i++) {
+    	sleep(rand() % 3);
         pthread_create(&customersID[i], NULL, Customer, (void *) &i);
         sleep(1);
     }
-
+	
     pthread_join(barberID, NULL);
 
     for (i = 0; i < n; ++i) pthread_join(customersID[i], NULL);
