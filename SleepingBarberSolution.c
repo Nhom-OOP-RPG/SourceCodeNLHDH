@@ -4,7 +4,7 @@
 #include <semaphore.h>
 
 // Maximum number of chairs
-#define MAX_CHAIR 5
+#define MAX_CHAIR 3
 // Maximum number of customers
 #define MAX_CUSTOMERS 20
 
@@ -28,18 +28,17 @@ int init(){
 }
 
 void * Barber(void *arg){
-    printf("The barber shop opens...\n");
+    printf("\nThe barber shop opens...\n");
     while (1){
 
         p(customers);   //wait(customers)
         pthread_mutex_lock(&seats);    //wait(seat)
         ++ freeSeats;
-        printf("\nThe barber is cutting hair for a customer...\n");
-        printf("Number of free seats: %d\n", freeSeats);
-		sleep(rand() % 4 + 1);
-		pthread_mutex_unlock(&seats);   //signal(seat)
-        v(barber);     //signal(barber)
-        printf( "The barber has done one!\n");
+        printf("\nNumber of free seats: %d\n", freeSeats);
+		sleep(rand() % 5 + 1);
+		v(barber);	//signal(barber)
+		pthread_mutex_unlock(&seats);   //signal(seat)     
+        printf( "\nThe barber has done one!\n");
         if(freeSeats == MAX_CHAIR && i == n) pthread_exit(NULL);
     }
 }
@@ -47,38 +46,36 @@ void * Barber(void *arg){
 void * Customer(void *arg){
     int * id_p = (int *)arg;
     int id = *id_p ;
-    
     printf("\nCustomer #%d comes ... \n", id);
     pthread_mutex_lock(&seats);  //wait(seat)  
     if (freeSeats > 0){
 
         freeSeats--;
-        printf("Number of free seats: %d\n", freeSeats);
+        printf("\nNumber of free seats: %d\n", freeSeats);
         v(customers);   //signal(customers)
         pthread_mutex_unlock(&seats);   //signal(seat)
         p(barber);  //wait(barber)
-        printf("Customer #%d is ready to be cutted his hair... \n", id);
+        printf("\nThe barber is cutting hair for #%d...\n", id);
     } else {
         
         pthread_mutex_unlock(&seats);   //signal(seat)
-        printf("There is no freeseat left.\n");
+        printf("\nThere is no freeseat left.\n");
         printf("Customer #%d left ... \n", id);
     }       
 }
 
 int main(){ 
-
     if(init()) {
         printf("initialize semaphore error!\n") ;
         return 0;
     }
 
     printf ("The maximum number of customer is 20\n");
-    printf ("The maximum number of free chair is 4\n");
+    printf ("The maximum number of free chair is %d\n", MAX_CHAIR);
     printf ("====================================\n");
-    printf ("Please take the number of customers: ");
+    printf ("\nPlease take the number of customers: ");
     scanf("%d", &n);
-    printf("====================================\n");
+    printf("\n====================================\n");
     printf ("=============== START ==============\n");
     printf ("====================================\n");
 
@@ -91,10 +88,9 @@ int main(){
     	sleep(rand() % 3);
         pthread_create(&customersID[i], NULL, Customer, (void *) &i);
         sleep(1);
-    }
-	
-    pthread_join(barberID, NULL);
+    }	
 
+    pthread_join(barberID, NULL);
     for (i = 0; i < n; ++i) pthread_join(customersID[i], NULL);
 
     printf("============ THE END =============");
