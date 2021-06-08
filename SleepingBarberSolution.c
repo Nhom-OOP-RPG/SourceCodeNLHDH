@@ -34,8 +34,8 @@ void * Barber(void *arg){
         p(customers);   //wait(customers)
         pthread_mutex_lock(&seats);    //wait(seat)
         ++ freeSeats;
-        printf("\nNumber of free seats: %d\n", freeSeats);
-		sleep(rand() % 5 + 1);
+        //printf("\nNumber of free seats: %d\n", freeSeats);
+		sleep(rand() % 8 +1);
 		v(barber);	//signal(barber)
 		pthread_mutex_unlock(&seats);   //signal(seat)     
         printf( "\nThe barber has done one!\n");
@@ -51,11 +51,14 @@ void * Customer(void *arg){
     if (freeSeats > 0){
 
         freeSeats--;
-        printf("\nNumber of free seats: %d\n", freeSeats);
+        printf("\nThe customer #%d is sitting on the waiting chair.\n", id);
+        printf("Number of free seats: %d\n", freeSeats);
         v(customers);   //signal(customers)
         pthread_mutex_unlock(&seats);   //signal(seat)
         p(barber);  //wait(barber)
-        printf("\nThe barber is cutting hair for #%d...\n", id);
+        printf("\nThe customer #%d is sitting on the barber's chair.\n", id);
+        printf("Number of free seats: %d\n", freeSeats);
+        printf("The barber is cutting hair for #%d...\n", id);
     } else {
         
         pthread_mutex_unlock(&seats);   //signal(seat)
@@ -69,7 +72,7 @@ int main(){
         printf("initialize semaphore error!\n") ;
         return 0;
     }
-
+    
     printf ("The maximum number of customer is 20\n");
     printf ("The maximum number of free chair is %d\n", MAX_CHAIR);
     printf ("====================================\n");
@@ -85,7 +88,7 @@ int main(){
     pthread_create(&barberID, NULL, Barber, NULL);
 
     for (i = 0; i < n; i++) {
-    	sleep(rand() % 3);
+    	sleep(rand() % 3 + 1);
         pthread_create(&customersID[i], NULL, Customer, (void *) &i);
         sleep(1);
     }	
