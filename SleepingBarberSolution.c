@@ -34,7 +34,6 @@ void * Barber(void *arg){
         p(customers);   //wait(customers)
         pthread_mutex_lock(&seats);    //wait(seat)
         ++ freeSeats;
-        //printf("\nNumber of free seats: %d\n", freeSeats);
 		sleep(rand() % 8 +1);
 		v(barber);	//signal(barber)
 		pthread_mutex_unlock(&seats);   //signal(seat)     
